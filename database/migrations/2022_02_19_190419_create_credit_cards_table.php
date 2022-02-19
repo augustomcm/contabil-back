@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('credit_cards', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('limit_value')->unsigned();
+            $table->string('limit_currency');
             $table->string('description');
             $table->integer('closing_day')->unsigned();
             $table->integer('expiration_day')->unsigned();

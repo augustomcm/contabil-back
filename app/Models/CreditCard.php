@@ -2,15 +2,45 @@
 
 namespace App\Models;
 
+use App\Helpers\Interfaces\Money;
+use App\Helpers\MoneyCast;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CreditCard extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'description',
         'closing_day',
-        'expiration_day'
+        'expiration_day',
+        'limit'
     ];
+
+    protected $casts = [
+        'limit' => MoneyCast::class
+    ];
+
+    public function debit(Money $money)
+    {
+        $money = $money->absolute();
+        if($money->greaterThan($this->limit)) {
+            throw new \InvalidArgumentException("Insufficient limit.");
+        }
+
+        $this->limit = $this->limit->subtract($money);
+
+        $this->save();
+    }
+
+    public function refunding(Money $money)
+    {
+        $money = $money->absolute();
+        $this->limit = $this->limit->add($money);
+
+        $this->save();
+    }
 
     protected static function boot()
     {
