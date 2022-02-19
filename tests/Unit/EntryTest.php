@@ -5,10 +5,12 @@ namespace Tests\Unit;
 use App\Models\AccountDefault;
 use App\Models\Entry;
 use App\Helpers\Money;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EntryTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic unit test example.
      *

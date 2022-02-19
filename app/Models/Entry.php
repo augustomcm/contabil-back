@@ -47,9 +47,13 @@ class Entry extends Model
         }
 
         $this->getAccount()->deposit($this->value);
-        $this->account()->dissociate($this->account);
+        $this->getAccount()->save();
+
+        $this->account()->dissociate();
         $this->paid_at = null;
         $this->status = EntryStatus::PENDING;
+
+        $this->save();
     }
 
     public function getAccount() : ?Account
