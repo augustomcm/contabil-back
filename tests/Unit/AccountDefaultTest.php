@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-//TODO fazer os testes de depositar e debitar da conta
+
 class AccountDefaultTest extends TestCase
 {
     use WithFaker, RefreshDatabase;

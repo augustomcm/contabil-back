@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('balance_value');
             $table->string('balance_currency');
+            $table->foreignIdFor(\App\Models\User::class, 'owner_id')->constrained('users');
             $table->timestamps();
         });
     }

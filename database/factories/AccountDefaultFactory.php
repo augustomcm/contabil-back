@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Helpers\Money;
 use App\Models\AccountDefault;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +21,8 @@ class AccountDefaultFactory extends Factory
     public function definition()
     {
         return [
-            'balance' => new Money(10000)
+            'balance' => new Money(10000),
+            'owner_id' => User::factory()
         ];
     }
 }

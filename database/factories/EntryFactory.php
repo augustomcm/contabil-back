@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Helpers\Money;
 use App\Models\Entry;
 use App\Models\EntryType;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +23,8 @@ class EntryFactory extends Factory
     {
         return [
             'value' => new Money(10000),
-            'type' => EntryType::DEFAULT
+            'type' => EntryType::DEFAULT,
+            'owner_id' => User::factory()
         ];
     }
 }

@@ -80,4 +80,9 @@ class Entry extends Model
     {
         return $this->type === EntryType::CREDIT_CARD;
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

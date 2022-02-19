@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\CreditCard;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Helpers\Money;
 
@@ -23,7 +24,8 @@ class CreditCardFactory extends Factory
             'limit' => new Money($this->faker->numberBetween(0,1000000)), //0 between 10,000.00
             'description' => $this->faker->creditCardType(),
             'closing_day' => $this->faker->numberBetween(1,31),
-            'expiration_day' => $this->faker->numberBetween(1,31)
+            'expiration_day' => $this->faker->numberBetween(1,31),
+            'owner_id' => User::factory()
         ];
     }
 }

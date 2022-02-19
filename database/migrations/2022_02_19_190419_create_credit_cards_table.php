@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description');
             $table->integer('closing_day')->unsigned();
             $table->integer('expiration_day')->unsigned();
+            $table->foreignIdFor(\App\Models\User::class, 'owner_id')->constrained('users');
             $table->timestamps();
         });
     }

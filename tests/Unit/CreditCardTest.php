@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\CreditCard;
 use App\Models\Entry;
 use App\Models\Invoice;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Helpers\Money;
@@ -24,8 +25,9 @@ class CreditCardTest extends TestCase
             'description' => $this->faker->creditCardType(),
             'closing_day' => $this->faker->numberBetween(1,31),
             'expiration_day' => $this->faker->numberBetween(1,31),
-            'limit' => new Money(10000) // 100.00
+            'limit' => new Money(10000), // 100.00
         ]);
+        $creditCard->owner()->associate(User::factory()->create());
 
         $creditCard->save();
 

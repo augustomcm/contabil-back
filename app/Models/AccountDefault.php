@@ -43,4 +43,9 @@ class AccountDefault extends Model implements Account
     {
         return $this->balance;
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

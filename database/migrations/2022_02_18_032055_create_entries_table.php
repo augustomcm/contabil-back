@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('status');
             $table->dateTime('paid_at')->nullable();
             $table->nullableMorphs('account');
+            $table->foreignIdFor(\App\Models\User::class, 'owner_id')->constrained('users');
             $table->timestamps();
         });
     }

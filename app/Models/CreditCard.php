@@ -22,6 +22,20 @@ class CreditCard extends Model
         'limit' => MoneyCast::class
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        self::created(function(CreditCard $creditCard) {
+            $startDate = now()->setDay($creditCard->closing_day)->startOfDay()->toImmutable();
+
+            $invoice = new Invoice();
+
+            $invoice->setPeriode($startDate, $startDate->addMonth());
+            $invoice->setCreditCard($creditCard);
+            $invoice->save();
+        });
+    }
+
     public function debit(Money $money)
     {
         $money = $money->absolute();
@@ -52,17 +66,8 @@ class CreditCard extends Model
         return $this->hasMany(Invoice::class);
     }
 
-    protected static function boot()
+    public function owner()
     {
-        parent::boot();
-        self::created(function(CreditCard $creditCard) {
-            $startDate = now()->setDay($creditCard->closing_day)->startOfDay()->toImmutable();
-
-            $invoice = new Invoice();
-
-            $invoice->setPeriode($startDate, $startDate->addMonth());
-            $invoice->setCreditCard($creditCard);
-            $invoice->save();
-        });
+        return $this->belongsTo(User::class);
     }
 }
