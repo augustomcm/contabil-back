@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\CreditCard;
+use App\Models\Entry;
 use App\Models\Invoice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -34,13 +35,15 @@ class CreditCardTest extends TestCase
 
     public function test_if_debit_value()
     {
+        $limitValue = $this->faker->numberBetween(1, 10000); // 0.01 between 100.00
+        $valueDebit = $this->faker->numberBetween(1, $limitValue); // 0.01 between limitValue
         $creditCard = CreditCard::factory()->create([
-            'limit' => new Money(10000) // 100.00
+            'limit' => new Money($limitValue) // 100.00
         ]);
 
-        $creditCard->debit(new Money(6000));
+        $creditCard->debit(new Money($valueDebit));
 
-        $expected = new Money(4000);
+        $expected = new Money($limitValue-$valueDebit);
         $this->assertTrue($expected->equals($creditCard->limit));
     }
 
@@ -65,5 +68,46 @@ class CreditCardTest extends TestCase
 
         $expected = new Money(16000);
         $this->assertTrue($expected->equals($creditCard->limit));
+    }
+
+    public function test_add_entry_in_current_invoice()
+    {
+        $limitValue = $this->faker->numberBetween(1, 10000); // 0.01 between 100.00
+        $entryValue = $this->faker->numberBetween(1, $limitValue); // 0.01 between limitValue
+
+        $currentInvoice = CreditCard::factory()->create([
+            'limit' => new Money($limitValue)
+        ])->getCurrentInvoice();
+
+        $entry = Entry::factory()->create([
+            'value' => new Money($entryValue)
+        ]);
+
+        $currentInvoice->addEntry($entry);
+
+        $limitExpected = new Money($limitValue - $entryValue);
+        $this->assertTrue($limitExpected->equals($currentInvoice->getCreditCard()->limit));
+        $this->assertCount(1, $currentInvoice->entries);
+    }
+
+    public function test_refunding_entry_in_current_invoice()
+    {
+        $limitValue = $this->faker->numberBetween(1, 10000); // 0.01 between 100.00
+        $entryValue = $this->faker->numberBetween(1, 10000); // 0.01 between limitValue
+
+        $currentInvoice = CreditCard::factory()->create([
+            'limit' => new Money($limitValue)
+        ])->getCurrentInvoice();
+
+        $entry = Entry::factory()->create([
+            'value' => new Money($entryValue)
+        ]);
+        $currentInvoice->entries()->attach($entry);
+
+        $currentInvoice->removeEntry($entry);
+
+        $limitExpected = new Money($limitValue + $entryValue);
+        $this->assertTrue($limitExpected->equals($currentInvoice->getCreditCard()->limit));
+        $this->assertCount(0, $currentInvoice->entries);
     }
 }

@@ -42,6 +42,16 @@ class CreditCard extends Model
         $this->save();
     }
 
+    public function getCurrentInvoice() : Invoice
+    {
+        return $this->invoices()->orderBy('created_at', 'desc')->first();
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
     protected static function boot()
     {
         parent::boot();

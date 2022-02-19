@@ -41,4 +41,29 @@ class Invoice extends Model
     {
         return $this->belongsTo(CreditCard::class);
     }
+
+    public function addEntry(Entry $entry)
+    {
+        $this->creditCard->debit($entry->getValue());
+        $this->entries()->attach($entry);
+    }
+
+    public function removeEntry(Entry $entry)
+    {
+        $this->creditCard->refunding($entry->getValue());
+        $this->entries()->detach($entry);
+    }
+
+    public function getCreditCard() : CreditCard
+    {
+        return $this->creditCard;
+    }
+
+    /**
+     * Use this method only within this class
+     */
+    public function entries()
+    {
+        return $this->belongsToMany(Entry::class);
+    }
 }

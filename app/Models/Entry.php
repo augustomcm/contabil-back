@@ -27,6 +27,11 @@ class Entry extends Model
         'status' => EntryStatus::PENDING
     ];
 
+    public function getValue() : Money
+    {
+        return $this->value;
+    }
+
     public function pay(Account $account, \DateTimeInterface $dateTime)
     {
         if($this->isPaid()) {
@@ -47,7 +52,7 @@ class Entry extends Model
         }
 
         $this->getAccount()->deposit($this->value);
-        $this->getAccount()->save();
+        $this->getAccount()->save(); // consequences of active record :/
 
         $this->account()->dissociate();
         $this->paid_at = null;
@@ -69,5 +74,10 @@ class Entry extends Model
     public function isPaid()
     {
         return $this->status === EntryStatus::PAID;
+    }
+
+    public function isCreditCardType()
+    {
+        return $this->type === EntryType::CREDIT_CARD;
     }
 }
