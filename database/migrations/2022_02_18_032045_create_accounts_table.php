@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('balance_value');
+            $table->string('balance_currency');
             $table->timestamps();
         });
     }

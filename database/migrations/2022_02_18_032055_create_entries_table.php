@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('entries', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('value_value');
+            $table->string('value_currency');
+            $table->string('type');
+            $table->string('status');
+            $table->dateTime('paid_at')->nullable();
+            $table->nullableMorphs('account');
             $table->timestamps();
         });
     }
