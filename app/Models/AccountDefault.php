@@ -25,6 +25,8 @@ class AccountDefault extends Model implements Account
     {
         $absoluteValue = $value->absolute();
         $this->balance = $this->getBalance()->add($absoluteValue);
+
+        $this->save();
     }
 
     public function debit(Money $value)
@@ -34,6 +36,7 @@ class AccountDefault extends Model implements Account
             throw new \InvalidArgumentException("Insufficient funds.");
 
         $this->balance = $this->getBalance()->subtract($absoluteValue);
+        $this->save();
     }
 
     public function getBalance() : Money
