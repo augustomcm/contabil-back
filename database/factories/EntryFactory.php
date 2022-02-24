@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Helpers\Money;
+use App\Models\Account;
+use App\Models\AccountDefault;
 use App\Models\Entry;
 use App\Models\EntryType;
 use App\Models\User;
@@ -27,4 +29,22 @@ class EntryFactory extends Factory
             'owner_id' => User::factory()
         ];
     }
+
+    public function withPayment()
+    {
+        return $this->state([])->afterMaking(function(Entry $entry) {
+            $entry->pay(
+              AccountDefault::factory()->create(),
+              now()
+            );
+        });
+    }
+
+    public function creditCardType()
+    {
+        return $this->state([
+            'type' => EntryType::CREDIT_CARD
+        ]);
+    }
+
 }

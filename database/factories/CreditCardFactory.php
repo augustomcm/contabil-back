@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\CreditCard;
+use App\Models\Entry;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Helpers\Money;
@@ -27,5 +28,17 @@ class CreditCardFactory extends Factory
             'expiration_day' => $this->faker->numberBetween(1,31),
             'owner_id' => User::factory()
         ];
+    }
+
+    public function withEntry()
+    {
+        return $this->state([])->afterCreating(function(CreditCard $creditCard) {
+            $entry = Entry::factory()
+                ->creditCardType()
+                ->create([ 'value' => $creditCard->limit ]);
+
+            $currentInvoice = $creditCard->getCurrentInvoice();
+            $currentInvoice->addEntry($entry);
+        });
     }
 }
