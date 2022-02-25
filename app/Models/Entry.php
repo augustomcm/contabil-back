@@ -20,10 +20,12 @@ class Entry extends Model
         'value' => MoneyCast::class,
         'status' => EntryStatus::class,
         'payment_type' => EntryPaymentType::class,
-        'paid_at' => 'date'
+        'paid_at' => 'date',
+        'type' => EntryType::class
     ];
 
     protected $attributes = [
+        'type' => EntryType::EXPENSE,
         'status' => EntryStatus::PENDING
     ];
 
@@ -38,7 +40,12 @@ class Entry extends Model
             return;
         }
 
-        $account->debit($this->value);
+        if($this->isExpense()) {
+            $account->debit($this->value);
+        }else{
+            $account->deposit($this->value);
+        }
+
         $this->paid_at = $dateTime;
         $this->status = EntryStatus::PAID;
 
@@ -51,7 +58,12 @@ class Entry extends Model
             return;
         }
 
-        $this->getAccount()->deposit($this->value);
+        if($this->isExpense()) {
+            $this->getAccount()->deposit($this->value);
+        }else{
+            $this->getAccount()->debit($this->value);
+        }
+
         $this->getAccount()->save(); // consequences of active record :/
 
         $this->account()->dissociate();
@@ -59,6 +71,11 @@ class Entry extends Model
         $this->status = EntryStatus::PENDING;
 
         $this->save();
+    }
+
+    public function isExpense()
+    {
+        return $this->type === EntryType::EXPENSE;
     }
 
     public function getAccount() : ?Account

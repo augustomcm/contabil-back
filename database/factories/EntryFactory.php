@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\AccountDefault;
 use App\Models\Entry;
 use App\Models\EntryPaymentType;
+use App\Models\EntryType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,7 +27,8 @@ class EntryFactory extends Factory
         return [
             'value' => new Money(10000),
             'payment_type' => EntryPaymentType::DEFAULT,
-            'owner_id' => User::factory()
+            'owner_id' => User::factory(),
+            'type' => EntryType::EXPENSE
         ];
     }
 
