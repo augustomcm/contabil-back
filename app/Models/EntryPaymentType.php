@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-enum EntryType: string
+enum EntryPaymentType: string
 {
     case DEFAULT = 'DEFAULT';
     case CREDIT_CARD = 'CREDIT_CARD';

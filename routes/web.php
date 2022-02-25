@@ -17,7 +17,7 @@ Route::get('/', function () {
 
     $entry = new \App\Models\Entry([
         'value' => new \App\Helpers\Money(10000),
-        'type' => \App\Models\EntryType::DEFAULT
+        'type' => \App\Models\EntryPaymentType::DEFAULT
     ]);
 
 //    return view('welcome');

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('value_value');
             $table->string('value_currency');
-            $table->string('type');
+            $table->string('payment_type');
             $table->string('status');
             $table->dateTime('paid_at')->nullable();
             $table->nullableMorphs('account');

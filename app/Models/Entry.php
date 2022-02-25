@@ -19,7 +19,7 @@ class Entry extends Model
     protected $casts = [
         'value' => MoneyCast::class,
         'status' => EntryStatus::class,
-        'type' => EntryType::class,
+        'payment_type' => EntryPaymentType::class,
         'paid_at' => 'date'
     ];
 
@@ -78,7 +78,7 @@ class Entry extends Model
 
     public function isCreditCardType()
     {
-        return $this->type === EntryType::CREDIT_CARD;
+        return $this->payment_type === EntryPaymentType::CREDIT_CARD;
     }
 
     public function owner()

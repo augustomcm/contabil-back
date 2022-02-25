@@ -6,7 +6,7 @@ use App\Helpers\Money;
 use App\Models\Account;
 use App\Models\AccountDefault;
 use App\Models\Entry;
-use App\Models\EntryType;
+use App\Models\EntryPaymentType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,7 +25,7 @@ class EntryFactory extends Factory
     {
         return [
             'value' => new Money(10000),
-            'type' => EntryType::DEFAULT,
+            'payment_type' => EntryPaymentType::DEFAULT,
             'owner_id' => User::factory()
         ];
     }
@@ -43,7 +43,7 @@ class EntryFactory extends Factory
     public function creditCardType()
     {
         return $this->state([
-            'type' => EntryType::CREDIT_CARD
+            'payment_type' => EntryPaymentType::CREDIT_CARD
         ]);
     }
 
