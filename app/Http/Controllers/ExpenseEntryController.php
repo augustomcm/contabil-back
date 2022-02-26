@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Money;
+use App\Http\Resources\EntryResource;
 use App\Models\CreditCard;
 use App\Models\EntryService;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class ExpenseEntryController extends Controller
 
             DB::commit();
 
-            return response()->json($entry, Response::HTTP_CREATED);
+            return response()->json(new EntryResource($entry), Response::HTTP_CREATED);
         }catch (\Exception $ex) {
             DB::rollBack();
             Log::critical($ex->getMessage());

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class ExpenseEntryTest extends TestCase
+class ExpenseEntryControllerTest extends TestCase
 {
     use WithFaker;
 
@@ -30,10 +30,11 @@ class ExpenseEntryTest extends TestCase
             'value' => 20.5
         ]);
 
-        $response->assertStatus(201);
-        $response->assertJson([
-            'payment_type' => EntryPaymentType::DEFAULT->value
-        ]);
+        $response
+            ->assertCreated()
+            ->assertJson([
+                'payment_type' => EntryPaymentType::DEFAULT->value
+            ]);
     }
 
     public function test_create_expense_entry_redit_card()
@@ -51,9 +52,10 @@ class ExpenseEntryTest extends TestCase
             'credit_card_id' => $creditCard->id
         ]);
 
-        $response->assertStatus(201);
-        $response->assertJson([
-            'payment_type' => EntryPaymentType::CREDIT_CARD->value
-        ]);
+        $response
+            ->assertCreated()
+            ->assertJson([
+                'payment_type' => EntryPaymentType::CREDIT_CARD->value
+            ]);
     }
 }
