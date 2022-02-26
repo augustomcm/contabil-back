@@ -28,6 +28,11 @@ class LoginController extends Controller
         ]);
     }
 
+    public function currentUser(Request $request)
+    {
+        return $request->user();
+    }
+
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
