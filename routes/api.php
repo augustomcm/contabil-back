@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ExpenseEntryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,12 +14,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('login', [ LoginController::class, 'login']);
 
-Route::middleware(['auth:sanctum'])->get('/user', [\App\Http\Controllers\LoginController::class, 'currentUser']);
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::get('/user', [LoginController::class, 'currentUser']);
+    Route::post('logout', [LoginController::class, 'logout']);
 
-Route::post('login', [ \App\Http\Controllers\LoginController::class, 'login']);
-Route::post('logout', [ \App\Http\Controllers\LoginController::class, 'logout'])
-    ->middleware('auth:sanctum');
+    Route::post('expenses', [ExpenseEntryController::class, 'store']);
+});
 
-Route::post('expenses', [ \App\Http\Controllers\ExpenseEntryController::class, 'store'])
-    ->middleware('auth:sanctum');
