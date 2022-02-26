@@ -21,7 +21,7 @@ namespace App\Helpers;
      static public function createByFloat(float $value, $currency = self::CURRENCY)
      {
          $number = (int) ($value * 100);
-         return new \App\Modules\Helpers\Money($number, $currency);
+         return new self($number, $currency);
      }
 
      public function add(IMoney $money) : IMoney

@@ -21,3 +21,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::post('login', [ \App\Http\Controllers\LoginController::class, 'login']);
 Route::post('logout', [ \App\Http\Controllers\LoginController::class, 'logout'])
     ->middleware('auth:sanctum');
+
+Route::post('expenses', [ \App\Http\Controllers\ExpenseEntryController::class, 'store'])
+    ->middleware('auth:sanctum');
