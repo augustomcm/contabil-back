@@ -26,7 +26,8 @@ class Entry extends Model
 
     protected $attributes = [
         'type' => EntryType::EXPENSE,
-        'status' => EntryStatus::PENDING
+        'status' => EntryStatus::PENDING,
+        'payment_type' => EntryPaymentType::DEFAULT
     ];
 
     public function getValue() : Money
@@ -91,6 +92,11 @@ class Entry extends Model
     public function isPaid()
     {
         return $this->status === EntryStatus::PAID;
+    }
+
+    public function setCreditCardType()
+    {
+        $this->payment_type = EntryPaymentType::CREDIT_CARD;
     }
 
     public function isCreditCardType()

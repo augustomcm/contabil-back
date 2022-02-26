@@ -6,17 +6,29 @@ use App\Helpers\Money;
 use App\Models\CreditCard;
 use App\Models\Entry;
 use App\Models\EntryService;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EntryServiceTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
+
+    public function test_create_expense_entry_credit_card()
+    {
+        $owner = User::factory()->create();
+        $creditCard = CreditCard::factory()
+            ->create([ 'limit' => new Money(1000) ]);
+
+        $service = new EntryService();
+
+        $entry = $service->createExpenseEntry($owner, new Money(1000), $creditCard);
+
+        $currentInvoice = $creditCard->getCurrentInvoice();
+        $this->assertCount(1, $currentInvoice->entries()->get());
+        $this->assertTrue($entry->isCreditCardType());
+    }
+
     public function test_delete_entry()
     {
         $entry = Entry::factory()->create();

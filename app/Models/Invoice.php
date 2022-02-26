@@ -44,6 +44,9 @@ class Invoice extends Model
 
     public function addEntry(Entry $entry)
     {
+        $entry->setCreditCardType();
+        $entry->save();
+
         $this->creditCard->debit($entry->getValue());
         $this->entries()->attach($entry);
     }
