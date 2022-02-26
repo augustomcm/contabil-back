@@ -20,7 +20,7 @@ namespace App\Helpers;
 
      static public function createByFloat(float $value, $currency = self::CURRENCY)
      {
-         $number = (int) ($value * 100);
+         $number = round($value * 100);
          return new self($number, $currency);
      }
 
