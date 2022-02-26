@@ -26,13 +26,15 @@ class ExpenseEntryControllerTest extends TestCase
             $this->user
         );
 
+        $value = $this->faker->randomFloat(2);
         $response = $this->postJson('/api/expenses', [
-            'value' => 20.5
+            'value' => $value
         ]);
 
         $response
             ->assertCreated()
             ->assertJson([
+                'value' => $value,
                 'payment_type' => EntryPaymentType::DEFAULT->value
             ]);
     }
@@ -47,14 +49,16 @@ class ExpenseEntryControllerTest extends TestCase
             'owner_id' => $this->user->id
         ]);
 
+        $value = $this->faker->randomFloat(2,0, $creditCard->getLimit()->getAmountFloat());
         $response = $this->postJson('/api/expenses', [
-            'value' => 53.51,
+            'value' => $value,
             'credit_card_id' => $creditCard->id
         ]);
 
         $response
             ->assertCreated()
             ->assertJson([
+                'value' => $value,
                 'payment_type' => EntryPaymentType::CREDIT_CARD->value
             ]);
     }

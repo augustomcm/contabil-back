@@ -22,6 +22,11 @@ class CreditCard extends Model
         'limit' => MoneyCast::class
     ];
 
+    public function getLimit() : Money
+    {
+        return $this->limit;
+    }
+
     protected static function boot()
     {
         parent::boot();

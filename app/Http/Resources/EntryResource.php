@@ -16,6 +16,7 @@ class EntryResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'value' => $this->value->getAmountFloat(),
             'payment_type' => $this->payment_type
         ];
     }

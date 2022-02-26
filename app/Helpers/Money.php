@@ -103,4 +103,9 @@ namespace App\Helpers;
      {
          return $this->money->greaterThan($money->money);
      }
+
+     public function getAmountFloat(): float
+     {
+         return $this->getAmount() / 100;
+     }
  }

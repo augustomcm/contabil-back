@@ -14,6 +14,7 @@ interface Money
     public function allocateTo(int $n) : array;
     public function format(bool $absolute, string $locale) : string;
     public function getAmount() : string;
+    public function getAmountFloat() : float;
     public function getCurrencyCode() : string;
     public function greaterThan(Money $money) : bool;
 }

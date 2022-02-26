@@ -22,6 +22,7 @@ class EntryService
             $invoice->addEntry($entry);
         }
 
+        $entry->getValue()->format();
         return $entry;
     }
 
