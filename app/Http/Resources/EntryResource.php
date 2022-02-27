@@ -17,10 +17,12 @@ class EntryResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
+            'status' => $this->status,
             'description' => $this->description,
             'isExpense' => $this->isExpense(),
             'value' => $this->value->getAmountFloat(),
-            'payment_type' => $this->payment_type
+            'paymentType' => $this->payment_type,
+            'isPaid' => $this->isPaid()
         ];
     }
 }

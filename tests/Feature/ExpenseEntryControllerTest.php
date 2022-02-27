@@ -36,7 +36,7 @@ class ExpenseEntryControllerTest extends TestCase
             ->assertCreated()
             ->assertJson([
                 'value' => $value,
-                'payment_type' => EntryPaymentType::DEFAULT->value
+                'paymentType' => EntryPaymentType::DEFAULT->value
             ]);
     }
 
@@ -61,7 +61,7 @@ class ExpenseEntryControllerTest extends TestCase
             ->assertCreated()
             ->assertJson([
                 'value' => $value,
-                'payment_type' => EntryPaymentType::CREDIT_CARD->value
+                'paymentType' => EntryPaymentType::CREDIT_CARD->value
             ]);
     }
 }
