@@ -25,19 +25,28 @@ class EntryFactory extends Factory
     public function definition()
     {
         return [
-            'description' => $this->faker->text,
-            'value' => new Money(10000),
+            'description' => $this->faker->name,
+            'value' => new Money($this->faker->randomNumber(5, false)),
             'payment_type' => EntryPaymentType::DEFAULT,
             'owner_id' => User::factory(),
             'type' => EntryType::EXPENSE
         ];
     }
 
+    public function income()
+    {
+        return $this->state([
+            'type' => EntryType::INCOME
+        ]);
+    }
+
     public function withPayment()
     {
         return $this->state([])->afterMaking(function(Entry $entry) {
             $entry->pay(
-              AccountDefault::factory()->create(),
+              AccountDefault::factory()->create([
+                  'balance' => $entry->getValue()
+              ]),
               now()
             );
         });
