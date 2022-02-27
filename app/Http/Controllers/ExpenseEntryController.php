@@ -16,6 +16,7 @@ class ExpenseEntryController extends Controller
     public function store(Request $req, EntryService $entryService)
     {
         $validated = $req->validate([
+            'description' => 'required',
             'value' => 'required',
             'credit_card_id' => 'nullable'
         ]);
@@ -32,8 +33,9 @@ class ExpenseEntryController extends Controller
             }
 
             $entry = $entryService->createExpenseEntry(
-                $owner,
+                $validated['description'],
                 Money::createByFloat($validated['value']),
+                $owner,
                 $creditCard
             );
 

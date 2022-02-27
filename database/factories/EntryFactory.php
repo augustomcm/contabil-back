@@ -25,6 +25,7 @@ class EntryFactory extends Factory
     public function definition()
     {
         return [
+            'description' => $this->faker->text,
             'value' => new Money(10000),
             'payment_type' => EntryPaymentType::DEFAULT,
             'owner_id' => User::factory(),

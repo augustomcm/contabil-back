@@ -28,6 +28,7 @@ class ExpenseEntryControllerTest extends TestCase
 
         $value = $this->faker->randomFloat(2);
         $response = $this->postJson('/api/expenses', [
+            'description' => $this->faker->text,
             'value' => $value
         ]);
 
@@ -39,7 +40,7 @@ class ExpenseEntryControllerTest extends TestCase
             ]);
     }
 
-    public function test_create_expense_entry_redit_card()
+    public function test_create_expense_entry_credit_card()
     {
         Sanctum::actingAs(
             $this->user
@@ -51,6 +52,7 @@ class ExpenseEntryControllerTest extends TestCase
 
         $value = $this->faker->randomFloat(2,0, $creditCard->getLimit()->getAmountFloat());
         $response = $this->postJson('/api/expenses', [
+            'description' => $this->faker->text,
             'value' => $value,
             'credit_card_id' => $creditCard->id
         ]);

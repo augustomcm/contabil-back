@@ -8,11 +8,12 @@ use App\Models\Entry;
 use App\Models\EntryService;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EntryServiceTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function test_create_expense_entry_credit_card()
     {
@@ -22,7 +23,7 @@ class EntryServiceTest extends TestCase
 
         $service = new EntryService();
 
-        $entry = $service->createExpenseEntry($owner, new Money(1000), $creditCard);
+        $entry = $service->createExpenseEntry($this->faker->text, new Money(1000), $owner, $creditCard);
 
         $currentInvoice = $creditCard->getCurrentInvoice();
         $this->assertCount(1, $currentInvoice->entries()->get());

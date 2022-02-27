@@ -6,9 +6,10 @@ use App\Helpers\Interfaces\Money;
 
 class EntryService
 {
-    public function createExpenseEntry(User $owner, Money $value, CreditCard $creditCard = null) : Entry
+    public function createExpenseEntry(string $description, Money $value, User $owner, CreditCard $creditCard = null) : Entry
     {
         $entry = new Entry([
+            'description' => $description,
             'value' => $value,
             'type' => EntryType::EXPENSE
         ]);

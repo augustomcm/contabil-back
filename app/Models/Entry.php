@@ -12,6 +12,7 @@ class Entry extends Model
     use HasFactory;
 
     protected $fillable = [
+        'description',
         'value',
         'type'
     ];
