@@ -23,6 +23,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('logout', [LoginController::class, 'logout']);
 
     Route::get('entries', [EntryController::class, 'index']);
+    Route::delete('entries/{entry}', [EntryController::class, 'destroy']);
+
     Route::get('accounts', [AccountController::class, 'index']);
 
     Route::post('expenses', [ExpenseEntryController::class, 'store']);

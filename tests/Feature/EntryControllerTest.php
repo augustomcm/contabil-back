@@ -54,4 +54,20 @@ class EntryControllerTest extends TestCase
                 'id' => $entryOfOtherOwner->id
             ]);
     }
+
+    public function test_remove_entry()
+    {
+        $entry = Entry::factory()->create([
+            'owner_id' => $this->user->id
+        ]);
+
+        Sanctum::actingAs(
+            $this->user
+        );
+
+        $response = $this->deleteJson("/api/entries/{$entry->id}");
+
+        $response->assertNoContent();
+        $this->assertModelMissing($entry);
+    }
 }
