@@ -21,6 +21,7 @@ class AccountDefaultFactory extends Factory
     public function definition()
     {
         return [
+            'description' => 'Carteira',
             'balance' => new Money(10000),
             'owner_id' => User::factory()
         ];

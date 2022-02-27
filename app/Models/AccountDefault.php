@@ -14,6 +14,7 @@ class AccountDefault extends Model implements Account
     protected $table = 'accounts';
 
     protected $fillable = [
+        'description',
         'balance'
     ];
 
