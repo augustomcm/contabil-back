@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ExpenseEntryController;
 use App\Http\Controllers\EntryController;
+use App\Http\Controllers\AccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::post('logout', [LoginController::class, 'logout']);
 
     Route::get('entries', [EntryController::class, 'index']);
+    Route::get('accounts', [AccountController::class, 'index']);
 
     Route::post('expenses', [ExpenseEntryController::class, 'store']);
 });
