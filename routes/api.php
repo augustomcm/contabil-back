@@ -25,6 +25,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
     Route::get('entries', [EntryController::class, 'index']);
     Route::delete('entries/{entry}', [EntryController::class, 'destroy']);
     Route::put('entries/{entry}/pay', [EntryController::class, 'pay']);
+    Route::put('entries/{entry}/cancel-payment', [EntryController::class, 'cancelPayment']);
 
     Route::get('accounts', [AccountController::class, 'index']);
 

@@ -65,4 +65,23 @@ class EntryController extends Controller
             throw $ex;
         }
     }
+
+    public function cancelPayment(Request $req, Entry $entry)
+    {
+        DB::beginTransaction();
+        try {
+            if($entry->owner()->isNot($req->user())) {
+                abort(404);
+            }
+
+            $entry->cancelPayment();
+
+            DB::commit();
+
+            return response()->noContent();
+        }catch (\Throwable $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
+    }
 }

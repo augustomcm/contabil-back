@@ -45,6 +45,7 @@ class EntryFactory extends Factory
         return $this->state([])->afterMaking(function(Entry $entry) {
             $entry->pay(
               AccountDefault::factory()->create([
+                  'owner_id' => $entry->owner_id,
                   'balance' => $entry->getValue()
               ]),
               now()
