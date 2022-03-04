@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Helpers\Money;
 use App\Http\Resources\EntryResource;
+use App\Models\AccountDefault;
 use App\Models\Entry;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
@@ -69,5 +71,30 @@ class EntryControllerTest extends TestCase
 
         $response->assertNoContent();
         $this->assertModelMissing($entry);
+    }
+
+    public function test_pay_entry()
+    {
+        $entry = Entry::factory()->create([
+            'value' => new Money(1000),
+            'owner_id' => $this->user->id
+        ]);
+
+        $account = AccountDefault::factory()->create([
+            'balance' => new Money(1000),
+            'owner_id' => $this->user->id
+        ]);
+
+        Sanctum::actingAs(
+            $this->user
+        );
+
+        $response = $this->putJson("/api/entries/{$entry->id}/pay", [
+            'account' => $account->id,
+            'date' => now()->format('Y-m-d')
+        ]);
+
+        $response->assertNoContent();
+        $this->assertTrue($entry->refresh()->isPaid());
     }
 }

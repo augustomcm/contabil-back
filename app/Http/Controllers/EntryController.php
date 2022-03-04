@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\EntryResource;
+use App\Models\Account;
+use App\Models\AccountDefault;
 use App\Models\Entry;
 use App\Models\EntryService;
 use Illuminate\Http\Request;
@@ -28,6 +30,33 @@ class EntryController extends Controller
             }
 
             $entryService->deleteEntry($entry);
+
+            DB::commit();
+
+            return response()->noContent();
+        }catch (\Throwable $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
+    }
+
+    public function pay(Request $req, Entry $entry)
+    {
+        DB::beginTransaction();
+        try {
+            $validated = $req->validate([
+                'account' => 'required',
+                'date' => 'date'
+            ]);
+
+            $account = AccountDefault::findOrFail($validated['account']);
+
+            if($entry->owner()->isNot($req->user())) {
+                abort(404);
+            }
+
+            $entry->pay($account, \DateTimeImmutable::createFromFormat('Y-m-d', $validated['date']));
+            $entry->save();
 
             DB::commit();
 
