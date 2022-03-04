@@ -56,7 +56,6 @@ class EntryController extends Controller
             }
 
             $entry->pay($account, \DateTimeImmutable::createFromFormat('Y-m-d', $validated['date']));
-            $entry->save();
 
             DB::commit();
 

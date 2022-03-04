@@ -52,6 +52,8 @@ class Entry extends Model
         $this->status = EntryStatus::PAID;
 
         $this->account()->associate($account);
+
+        $this->save();
     }
 
     public function cancelPayment()
