@@ -13,18 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('entries', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
-            $table->bigInteger('value_value');
-            $table->string('value_currency');
+            $table->string('name');
+            $table->string('color');
             $table->string('type');
-            $table->string('payment_type');
-            $table->string('status');
-            $table->dateTime('paid_at')->nullable();
-            $table->foreignIdFor(\App\Models\Category::class)
-                ->nullable()->constrained('categories');
-            $table->nullableMorphs('account');
             $table->foreignIdFor(\App\Models\User::class, 'owner_id')->constrained('users');
             $table->timestamps();
         });
@@ -37,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entries');
+        Schema::dropIfExists('categories');
     }
 };

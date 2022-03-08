@@ -6,7 +6,7 @@ use App\Helpers\Interfaces\Money;
 
 class EntryService
 {
-    public function createExpenseEntry(string $description, Money $value, User $owner, CreditCard $creditCard = null) : Entry
+    public function createExpenseEntry(string $description, Money $value, User $owner, Category $category, CreditCard $creditCard = null) : Entry
     {
         $entry = new Entry([
             'description' => $description,
@@ -15,6 +15,7 @@ class EntryService
         ]);
 
         $entry->owner()->associate($owner);
+        $entry->setCategory($category);
 
         $entry->save();
 

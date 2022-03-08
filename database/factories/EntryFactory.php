@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Helpers\Money;
 use App\Models\Account;
 use App\Models\AccountDefault;
+use App\Models\Category;
 use App\Models\Entry;
 use App\Models\EntryPaymentType;
 use App\Models\EntryType;
@@ -31,6 +32,18 @@ class EntryFactory extends Factory
             'owner_id' => User::factory(),
             'type' => EntryType::EXPENSE
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterMaking(function(Entry $entry) {
+            if(!$entry->category_id) {
+                $entry->setCategory(Category::factory()->create([
+                    'owner_id' => $entry->owner_id,
+                    'type' => $entry->type
+                ]));
+            }
+        });
     }
 
     public function income()

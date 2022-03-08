@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\CreditCard;
 use App\Models\EntryPaymentType;
 use App\Models\User;
@@ -18,6 +19,7 @@ class ExpenseEntryControllerTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        $this->category = Category::factory()->create(['owner_id' => $this->user->id]);
     }
 
     public function test_create_expense_entry()
@@ -29,7 +31,8 @@ class ExpenseEntryControllerTest extends TestCase
         $value = $this->faker->randomFloat(2);
         $response = $this->postJson('/api/expenses', [
             'description' => $this->faker->text,
-            'value' => $value
+            'value' => $value,
+            'category_id' => $this->category->id
         ]);
 
         $response
@@ -54,6 +57,7 @@ class ExpenseEntryControllerTest extends TestCase
         $response = $this->postJson('/api/expenses', [
             'description' => $this->faker->text,
             'value' => $value,
+            'category_id' => $this->category->id,
             'credit_card_id' => $creditCard->id
         ]);
 

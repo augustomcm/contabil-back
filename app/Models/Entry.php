@@ -31,6 +31,20 @@ class Entry extends Model
         'payment_type' => EntryPaymentType::DEFAULT
     ];
 
+    public function setCategory(Category $category)
+    {
+        if(!$category->owner->is($this->owner) || $category->type !== $this->type) {
+            throw new \InvalidArgumentException("Invalid category.");
+        }
+
+        $this->category()->associate($category);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     public function getValue() : Money
     {
         return $this->value;

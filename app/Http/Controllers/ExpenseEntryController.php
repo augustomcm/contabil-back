@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Money;
 use App\Http\Resources\EntryResource;
+use App\Models\Category;
 use App\Models\CreditCard;
 use App\Models\EntryService;
 use Illuminate\Http\Request;
@@ -18,7 +19,8 @@ class ExpenseEntryController extends Controller
         $validated = $req->validate([
             'description' => 'required',
             'value' => 'required',
-            'credit_card_id' => 'nullable'
+            'credit_card_id' => 'nullable',
+            'category_id' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -36,6 +38,7 @@ class ExpenseEntryController extends Controller
                 $validated['description'],
                 Money::createByFloat($validated['value']),
                 $owner,
+                Category::findOrFail($validated['category_id']),
                 $creditCard
             );
 

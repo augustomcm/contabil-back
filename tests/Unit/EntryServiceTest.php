@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Helpers\Money;
+use App\Models\Category;
 use App\Models\CreditCard;
 use App\Models\Entry;
 use App\Models\EntryService;
@@ -18,12 +19,13 @@ class EntryServiceTest extends TestCase
     public function test_create_expense_entry_credit_card()
     {
         $owner = User::factory()->create();
-        $creditCard = CreditCard::factory()
+        $category = Category::factory()->create(['owner_id' => $owner->id]);
+        $creditCard = CreditCard::factory(['owner_id' => $owner->id])
             ->create([ 'limit' => new Money(1000) ]);
 
         $service = new EntryService();
 
-        $entry = $service->createExpenseEntry($this->faker->text, new Money(1000), $owner, $creditCard);
+        $entry = $service->createExpenseEntry($this->faker->text, new Money(1000), $owner, $category, $creditCard);
 
         $currentInvoice = $creditCard->getCurrentInvoice();
         $this->assertCount(1, $currentInvoice->entries()->get());
