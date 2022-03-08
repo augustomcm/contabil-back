@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
+            'description' => $this->faker->word,
             'color' => $this->faker->hexColor,
             'type' => EntryType::EXPENSE,
             'owner_id' => User::factory()

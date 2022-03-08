@@ -1,10 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ExpenseEntryController;
-use App\Http\Controllers\EntryController;
-use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ {
+    LoginController,
+    ExpenseEntryController,
+    EntryController,
+    AccountController,
+    CategoryController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -16,11 +19,13 @@ use App\Http\Controllers\AccountController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('login', [ LoginController::class, 'login']);
+Route::post('login', [LoginController::class, 'login']);
 
-Route::middleware(['auth:sanctum'])->group(function() {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [LoginController::class, 'currentUser']);
     Route::post('logout', [LoginController::class, 'logout']);
+
+    Route::get('categories', [CategoryController::class, 'index']);
 
     Route::get('entries', [EntryController::class, 'index']);
     Route::delete('entries/{entry}', [EntryController::class, 'destroy']);

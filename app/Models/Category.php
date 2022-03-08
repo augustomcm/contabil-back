@@ -10,7 +10,7 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'color', 'type'
+        'description', 'color', 'type'
     ];
 
     protected $casts = [
