@@ -35,7 +35,10 @@ class CreditCardFactory extends Factory
         return $this->state([])->afterCreating(function(CreditCard $creditCard) {
             $entry = Entry::factory()
                 ->creditCardType()
-                ->create([ 'value' => $creditCard->limit ]);
+                ->create([
+                    'owner_id' => $creditCard->owner_id,
+                    'value' => $creditCard->limit
+                ]);
 
             $currentInvoice = $creditCard->getCurrentInvoice();
             $currentInvoice->addEntry($entry);

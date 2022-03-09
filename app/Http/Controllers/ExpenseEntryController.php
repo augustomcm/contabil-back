@@ -45,10 +45,9 @@ class ExpenseEntryController extends Controller
             DB::commit();
 
             return response()->json(new EntryResource($entry), Response::HTTP_CREATED);
-        }catch (\Exception $ex) {
+        }catch (\Throwable $ex) {
             DB::rollBack();
-            Log::critical($ex->getMessage());
-            return response()->json('', Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw $ex;
         }
     }
 }

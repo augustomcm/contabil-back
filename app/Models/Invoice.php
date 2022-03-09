@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Money;
 use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
@@ -17,6 +18,13 @@ class Invoice extends Model
         'start_date' => 'date',
         'final_date' => 'date'
     ];
+
+    public function getTotal() : Money
+    {
+        $value = $this->entries->reduce(fn($carry, $item) => $carry + $item->getValue()->getAmountFloat());
+
+        return Money::createByFloat($value ?? 0.00);
+    }
 
     public function setPeriode(\DateTimeInterface $startDate, \DateTimeImmutable $finalDate)
     {

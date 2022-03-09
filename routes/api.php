@@ -6,7 +6,8 @@ use App\Http\Controllers\ {
     ExpenseEntryController,
     EntryController,
     AccountController,
-    CategoryController
+    CategoryController,
+    CreditCardController
 };
 
 /*
@@ -33,6 +34,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('entries/{entry}/cancel-payment', [EntryController::class, 'cancelPayment']);
 
     Route::get('accounts', [AccountController::class, 'index']);
+    Route::get('credit-cards', [CreditCardController::class, 'index']);
 
     Route::post('expenses', [ExpenseEntryController::class, 'store']);
 });
