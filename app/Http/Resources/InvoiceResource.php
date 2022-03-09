@@ -16,8 +16,9 @@ class InvoiceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'final_date' => $this->final_date,
-            'total' => $this->getTotal()->getAmountFloat()
+            'status' => $this->status,
+            'total' => $this->getTotal()->getAmountFloat(),
+            'finalDate' => $this->final_date
         ];
     }
 }
