@@ -20,7 +20,7 @@ class CreditCardControllerTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    public function test_retrive_accounts()
+    public function test_retrive_credit_cards()
     {
         $creditCards = CreditCard::factory(5)->create([
             'owner_id' => $this->user->id
@@ -36,5 +36,22 @@ class CreditCardControllerTest extends TestCase
             ->assertStatus(200)
             ->assertJsonCount(5, 'data')
             ->assertResource(CreditCardResource::collection($creditCards));
+    }
+
+    public function test_close_current_invoice()
+    {
+        $creditCard = CreditCard::factory()->create([
+            'closing_day' => now()->subDay()->day,
+            'owner_id' => $this->user->id
+        ]);
+
+        Sanctum::actingAs(
+            $this->user
+        );
+
+        $response = $this->putJson("/api/credit-cards/{$creditCard->id}/close-invoice");
+
+        $response
+            ->assertNoContent();
     }
 }
