@@ -112,4 +112,26 @@ class CreditCardTest extends TestCase
         $this->assertTrue($limitExpected->equals($currentInvoice->getCreditCard()->limit));
         $this->assertCount(0, $currentInvoice->entries);
     }
+
+    public function test_close_current_invoice()
+    {
+        $creditCard = CreditCard::factory()->create([
+            'closing_day' => now()->subDay()->day
+        ]);
+
+        $creditCard->closeCurrentInvoice();
+
+        $this->assertTrue($creditCard->getCurrentInvoice()->isClosed());
+    }
+
+    public function test_pay_closed_invoice()
+    {
+        $creditCard = CreditCard::factory()->create([
+            'closing_day' => now()->subDay()->day
+        ]);
+
+        $creditCard->closeCurrentInvoice();
+
+        $this->assertTrue($creditCard->getCurrentInvoice()->isClosed());
+    }
 }

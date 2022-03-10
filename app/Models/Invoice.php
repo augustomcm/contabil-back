@@ -19,6 +19,20 @@ class Invoice extends Model
         'final_date' => 'date'
     ];
 
+    public function close()
+    {
+        if(now() < $this->final_date) {
+            throw new \InvalidArgumentException('Current date less than final date.');
+        }
+        $this->status = InvoiceStatus::CLOSED;
+        $this->save();
+    }
+
+    public function isClosed()
+    {
+        return $this->status === InvoiceStatus::CLOSED;
+    }
+
     public function getTotal() : Money
     {
         $value = $this->entries->reduce(fn($carry, $item) => $carry + $item->getValue()->getAmountFloat());
@@ -52,6 +66,10 @@ class Invoice extends Model
 
     public function addEntry(Entry $entry)
     {
+        if($this->isClosed()) {
+           throw new \InvalidArgumentException('Invoice is closed.');
+        }
+
         $entry->setCreditCardType();
         $entry->save();
 
@@ -61,6 +79,10 @@ class Invoice extends Model
 
     public function removeEntry(Entry $entry)
     {
+        if($this->isClosed()) {
+            throw new \InvalidArgumentException('Invoice is closed.');
+        }
+
         $this->creditCard->refunding($entry->getValue());
         $this->entries()->detach($entry);
     }

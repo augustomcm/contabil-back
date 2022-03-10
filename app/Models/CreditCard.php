@@ -31,7 +31,19 @@ class CreditCard extends Model
     {
         parent::boot();
         self::created(function(CreditCard $creditCard) {
-            $startDate = now()->setDay($creditCard->closing_day)->startOfDay()->toImmutable();
+            $currentDate = now();
+            if($currentDate->day > $creditCard->closing_day) {
+                $startDate = $currentDate
+                    ->subMonth()
+                    ->setDay($creditCard->closing_day)
+                    ->startOfDay()
+                    ->toImmutable();
+            }else{
+                $startDate = $currentDate
+                    ->setDay($creditCard->closing_day)
+                    ->startOfDay()
+                    ->toImmutable();
+            }
 
             $invoice = new Invoice();
 
@@ -59,6 +71,11 @@ class CreditCard extends Model
         $this->limit = $this->limit->add($money);
 
         $this->save();
+    }
+
+    public function closeCurrentInvoice()
+    {
+        $this->getCurrentInvoice()->close();
     }
 
     public function getCurrentInvoice() : Invoice
