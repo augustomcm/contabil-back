@@ -19,6 +19,21 @@ class Invoice extends Model
         'final_date' => 'date'
     ];
 
+    public function pay(Account $account)
+    {
+        if(!$this->isClosed()) {
+            throw new \InvalidArgumentException('Invoice is not closed.');
+        }
+
+        foreach ($this->entries as $entry) {
+            $entry->pay($account, now());
+        }
+
+        $this->status = InvoiceStatus::PAID;
+
+        $this->save();
+    }
+
     public function close()
     {
         if(now() < $this->final_date) {
@@ -31,6 +46,16 @@ class Invoice extends Model
     public function isClosed()
     {
         return $this->status === InvoiceStatus::CLOSED;
+    }
+
+    public function isPaid()
+    {
+        return $this->status === InvoiceStatus::PAID;
+    }
+
+    public function isOpened()
+    {
+        return $this->status === InvoiceStatus::OPENED;
     }
 
     public function getTotal() : Money

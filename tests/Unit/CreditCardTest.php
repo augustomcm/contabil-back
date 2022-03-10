@@ -2,9 +2,11 @@
 
 namespace Tests\Unit;
 
+use App\Models\AccountDefault;
 use App\Models\CreditCard;
 use App\Models\Entry;
 use App\Models\Invoice;
+use App\Models\InvoiceStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -133,5 +135,26 @@ class CreditCardTest extends TestCase
         $creditCard->closeCurrentInvoice();
 
         $this->assertTrue($creditCard->getCurrentInvoice()->isClosed());
+    }
+
+    public function test_pay_current_closed_invoice()
+    {
+        $creditCard = CreditCard::factory()->withClosedInvoice()->create([
+            'closing_day' => now()->subDay()->day
+        ]);
+
+        $currentInvoice = $creditCard->getCurrentInvoice();
+
+        $account = AccountDefault::factory()->create([
+            'balance' => $creditCard->getLimit(),
+            'owner_id' => $creditCard->owner_id
+        ]);
+
+        $creditCard->payCurrentInvoice($account);
+
+        $this->assertTrue($currentInvoice->entries->reduce(fn($curry, $item) => $curry && $item->isPaid(), true));
+        $this->assertTrue($currentInvoice->fresh()->isPaid());
+        $this->assertCount(2, $creditCard->invoices);
+        $this->assertTrue($creditCard->getCurrentInvoice()->isOpened());
     }
 }

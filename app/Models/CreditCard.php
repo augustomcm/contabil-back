@@ -31,26 +31,31 @@ class CreditCard extends Model
     {
         parent::boot();
         self::created(function(CreditCard $creditCard) {
-            $currentDate = now();
-            if($currentDate->day > $creditCard->closing_day) {
-                $startDate = $currentDate
-                    ->subMonth()
-                    ->setDay($creditCard->closing_day)
-                    ->startOfDay()
-                    ->toImmutable();
-            }else{
-                $startDate = $currentDate
-                    ->setDay($creditCard->closing_day)
-                    ->startOfDay()
-                    ->toImmutable();
-            }
-
-            $invoice = new Invoice();
-
-            $invoice->setPeriode($startDate, $startDate->addMonth());
-            $invoice->setCreditCard($creditCard);
-            $invoice->save();
+            $creditCard->createNewInvoice();
         });
+    }
+
+    private function createNewInvoice()
+    {
+        $currentDate = now();
+        if($currentDate->day > $this->closing_day) {
+            $startDate = $currentDate
+                ->subMonth()
+                ->setDay($this->closing_day)
+                ->startOfDay()
+                ->toImmutable();
+        }else{
+            $startDate = $currentDate
+                ->setDay($this->closing_day)
+                ->startOfDay()
+                ->toImmutable();
+        }
+
+        $invoice = new Invoice();
+
+        $invoice->setPeriode($startDate, $startDate->addMonth());
+        $invoice->setCreditCard($this);
+        $invoice->save();
     }
 
     public function debit(Money $money)
@@ -78,9 +83,15 @@ class CreditCard extends Model
         $this->getCurrentInvoice()->close();
     }
 
+    public function payCurrentInvoice(Account $account)
+    {
+        $this->getCurrentInvoice()->pay($account);
+        $this->createNewInvoice();
+    }
+
     public function getCurrentInvoice() : Invoice
     {
-        return $this->invoices()->orderBy('created_at', 'desc')->first();
+        return $this->invoices()->orderBy('id', 'desc')->first();
     }
 
     public function invoices()

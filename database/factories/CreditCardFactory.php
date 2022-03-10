@@ -30,6 +30,23 @@ class CreditCardFactory extends Factory
         ];
     }
 
+    public function withClosedInvoice()
+    {
+        return $this->state([])->afterCreating(function(CreditCard $creditCard) {
+            $entry = Entry::factory()
+                ->creditCardType()
+                ->create([
+                    'owner_id' => $creditCard->owner_id,
+                    'value' => $creditCard->limit
+                ]);
+
+            $currentInvoice = $creditCard->getCurrentInvoice();
+            $currentInvoice->addEntry($entry);
+
+            $creditCard->closeCurrentInvoice();
+        });
+    }
+
     public function withEntry()
     {
         return $this->state([])->afterCreating(function(CreditCard $creditCard) {
