@@ -23,7 +23,7 @@ class EntryResource extends JsonResource
             'value' => $this->value->getAmountFloat(),
             'paymentType' => $this->payment_type,
             'isPaid' => $this->isPaid(),
-            'date' => $this->date
+            'date' => $this->date->format('Y-m-d')
         ];
     }
 }
