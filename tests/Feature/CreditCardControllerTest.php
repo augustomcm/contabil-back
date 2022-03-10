@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Http\Resources\CreditCardResource;
+use App\Models\AccountDefault;
 use App\Models\CreditCard;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -50,6 +51,30 @@ class CreditCardControllerTest extends TestCase
         );
 
         $response = $this->putJson("/api/credit-cards/{$creditCard->id}/close-invoice");
+
+        $response
+            ->assertNoContent();
+    }
+
+    public function test_pay_current_invoice()
+    {
+        $creditCard = CreditCard::factory()->withClosedInvoice()->create([
+            'closing_day' => now()->subDay()->day,
+            'owner_id' => $this->user->id
+        ]);
+
+        $account = AccountDefault::factory()->create([
+            'balance' => $creditCard->getLimit(),
+            'owner_id' => $this->user->id
+        ]);
+
+        Sanctum::actingAs(
+            $this->user
+        );
+
+        $response = $this->putJson("/api/credit-cards/{$creditCard->id}/pay-invoice", [
+            'account' => $account->id
+        ]);
 
         $response
             ->assertNoContent();

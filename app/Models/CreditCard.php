@@ -85,6 +85,10 @@ class CreditCard extends Model
 
     public function payCurrentInvoice(Account $account)
     {
+        if($account->owner()->isNot($this->owner)) {
+            throw new \InvalidArgumentException("Invalid account.");
+        }
+
         $this->getCurrentInvoice()->pay($account);
         $this->createNewInvoice();
     }
