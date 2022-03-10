@@ -32,7 +32,8 @@ class ExpenseEntryControllerTest extends TestCase
         $response = $this->postJson('/api/expenses', [
             'description' => $this->faker->text,
             'value' => $value,
-            'category_id' => $this->category->id
+            'category_id' => $this->category->id,
+            'date' => now()->format('Y-m-d')
         ]);
 
         $response
@@ -58,7 +59,8 @@ class ExpenseEntryControllerTest extends TestCase
             'description' => $this->faker->text,
             'value' => $value,
             'category_id' => $this->category->id,
-            'credit_card_id' => $creditCard->id
+            'credit_card_id' => $creditCard->id,
+            'date' => now()->format('Y-m-d')
         ]);
 
         $response

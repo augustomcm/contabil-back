@@ -22,10 +22,12 @@ class EntryServiceTest extends TestCase
         $category = Category::factory()->create(['owner_id' => $owner->id]);
         $creditCard = CreditCard::factory(['owner_id' => $owner->id])
             ->create([ 'limit' => new Money(1000) ]);
+        $date = new \DateTime('today');
 
         $service = new EntryService();
 
-        $entry = $service->createExpenseEntry($this->faker->text, new Money(1000), $owner, $category, $creditCard);
+        $entry = $service->createExpenseEntry(
+            $date, $this->faker->text, new Money(1000), $owner, $category, $creditCard);
 
         $currentInvoice = $creditCard->getCurrentInvoice();
         $this->assertCount(1, $currentInvoice->entries()->get());

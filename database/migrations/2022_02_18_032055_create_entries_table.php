@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('payment_type');
             $table->string('status');
+            $table->dateTime('date');
             $table->dateTime('paid_at')->nullable();
             $table->foreignIdFor(\App\Models\Category::class)
                 ->nullable()->constrained('categories');

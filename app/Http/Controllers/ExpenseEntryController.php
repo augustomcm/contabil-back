@@ -10,7 +10,6 @@ use App\Models\EntryService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ExpenseEntryController extends Controller
 {
@@ -20,7 +19,8 @@ class ExpenseEntryController extends Controller
             'description' => 'required',
             'value' => 'required',
             'credit_card_id' => 'nullable',
-            'category_id' => 'required'
+            'category_id' => 'required',
+            'date' => 'required|date'
         ]);
 
         DB::beginTransaction();
@@ -35,6 +35,7 @@ class ExpenseEntryController extends Controller
             }
 
             $entry = $entryService->createExpenseEntry(
+                new \DateTime($validated['date']),
                 $validated['description'],
                 Money::createByFloat($validated['value']),
                 $owner,

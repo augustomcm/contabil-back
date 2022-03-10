@@ -22,7 +22,8 @@ class EntryResource extends JsonResource
             'isExpense' => $this->isExpense(),
             'value' => $this->value->getAmountFloat(),
             'paymentType' => $this->payment_type,
-            'isPaid' => $this->isPaid()
+            'isPaid' => $this->isPaid(),
+            'date' => $this->date
         ];
     }
 }

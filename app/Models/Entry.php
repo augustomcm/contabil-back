@@ -14,7 +14,8 @@ class Entry extends Model
     protected $fillable = [
         'description',
         'value',
-        'type'
+        'type',
+        'date'
     ];
 
     protected $casts = [
@@ -22,7 +23,8 @@ class Entry extends Model
         'status' => EntryStatus::class,
         'payment_type' => EntryPaymentType::class,
         'paid_at' => 'date',
-        'type' => EntryType::class
+        'type' => EntryType::class,
+        'date' => 'date'
     ];
 
     protected $attributes = [

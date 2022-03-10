@@ -6,12 +6,13 @@ use App\Helpers\Interfaces\Money;
 
 class EntryService
 {
-    public function createExpenseEntry(string $description, Money $value, User $owner, Category $category, CreditCard $creditCard = null) : Entry
+    public function createExpenseEntry(\DateTime $date, string $description, Money $value, User $owner, Category $category, CreditCard $creditCard = null) : Entry
     {
         $entry = new Entry([
             'description' => $description,
             'value' => $value,
-            'type' => EntryType::EXPENSE
+            'type' => EntryType::EXPENSE,
+            'date' => $date
         ]);
 
         $entry->owner()->associate($owner);

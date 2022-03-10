@@ -30,7 +30,8 @@ class EntryFactory extends Factory
             'value' => new Money($this->faker->randomNumber(5, false)),
             'payment_type' => EntryPaymentType::DEFAULT,
             'owner_id' => User::factory(),
-            'type' => EntryType::EXPENSE
+            'type' => EntryType::EXPENSE,
+            'date' => now()->format('Y-m-d')
         ];
     }
 
