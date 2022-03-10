@@ -14,9 +14,18 @@ class EntryController extends Controller
 {
     public function index(Request $req)
     {
+        $validated = $req->validate([
+            'month' => 'nullable|min:1|max:12'
+        ]);
+
+        $month = !empty($validated['month']) ? $validated['month'] : date('m');
+
+        $initalDate = \Carbon\CarbonImmutable::createMidnightDate(date('Y'), $month, 1);
+        $finalDate = $initalDate->lastOfMonth();
+
         $entries = Entry::where([
             'owner_id' => $req->user()->id
-        ])
+        ])->whereBetween('date', [$initalDate->format('Y-m-d'), $finalDate->format('Y-m-d')])
          ->orderBy('date', 'desc')
          ->orderBy('id', 'desc')
          ->get();
