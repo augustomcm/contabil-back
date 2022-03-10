@@ -25,7 +25,7 @@ class EntryControllerTest extends TestCase
     {
         $entries = Entry::factory(5)->create([
             'owner_id' => $this->user->id
-        ]);
+        ])->sortByDesc('date')->sortByDesc('id');
 
         Sanctum::actingAs(
             $this->user
