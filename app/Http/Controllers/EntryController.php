@@ -16,7 +16,10 @@ class EntryController extends Controller
     {
         $entries = Entry::where([
             'owner_id' => $req->user()->id
-        ])->orderBy('date', 'desc')->get();
+        ])
+         ->orderBy('date', 'desc')
+         ->orderBy('id', 'desc')
+         ->get();
 
         return EntryResource::collection($entries);
     }
