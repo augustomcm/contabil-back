@@ -34,6 +34,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('entries/{entry}/cancel-payment', [EntryController::class, 'cancelPayment']);
 
     Route::get('accounts', [AccountController::class, 'index']);
+    Route::post('accounts', [AccountController::class, 'store']);
+
     Route::get('credit-cards', [CreditCardController::class, 'index']);
     Route::put('credit-cards/{creditCard}/close-invoice', [CreditCardController::class, 'closeInvoice']);
     Route::put('credit-cards/{creditCard}/pay-invoice', [CreditCardController::class, 'payInvoice']);
