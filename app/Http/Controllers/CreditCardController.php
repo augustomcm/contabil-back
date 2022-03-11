@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Money;
 use App\Http\Resources\CreditCardResource;
 use App\Models\AccountDefault;
 use App\Models\CreditCard;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class CreditCardController extends Controller
@@ -17,6 +19,38 @@ class CreditCardController extends Controller
         ])->get();
 
         return CreditCardResource::collection($creditCards);
+    }
+
+    public function store(Request $req)
+    {
+        $validated = $req->validate([
+            'description' => 'required',
+            'closing_day' => 'required',
+            'expiration_day' => 'required',
+            'limit' => 'required'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $owner = $req->user();
+
+            $creditCard = new CreditCard([
+                'description' => $validated['description'],
+                'closing_day' => $validated['closing_day'],
+                'expiration_day' => $validated['expiration_day'],
+                'limit' => Money::createByFloat($validated['limit'])
+            ]);
+
+            $creditCard->setOwner($owner);
+            $creditCard->save();
+
+            DB::commit();
+
+            return response()->json(new CreditCardResource($creditCard), Response::HTTP_CREATED);
+        }catch (\Throwable $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
     }
 
     public function closeInvoice(Request $req, CreditCard $creditCard)

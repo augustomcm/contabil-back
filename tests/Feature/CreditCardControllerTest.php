@@ -21,6 +21,24 @@ class CreditCardControllerTest extends TestCase
         $this->user = User::factory()->create();
     }
 
+    public function test_create_credit_card()
+    {
+        Sanctum::actingAs(
+            $this->user
+        );
+
+        $response = $this->postJson('/api/credit-cards', [
+            'description' => 'Credit Card',
+            'closing_day' => 12,
+            'expiration_day' => 20,
+            'limit' => 100.00
+        ]);
+
+        $response
+            ->assertCreated()
+            ->assertJsonStructure(['id']);
+    }
+
     public function test_retrive_credit_cards()
     {
         $creditCards = CreditCard::factory(5)->create([

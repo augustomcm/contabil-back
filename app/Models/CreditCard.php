@@ -103,6 +103,11 @@ class CreditCard extends Model
         return $this->hasMany(Invoice::class);
     }
 
+    public function setOwner(User $owner)
+    {
+        $this->owner()->associate($owner);
+    }
+
     public function owner()
     {
         return $this->belongsTo(User::class);
