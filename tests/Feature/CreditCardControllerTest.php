@@ -60,9 +60,13 @@ class CreditCardControllerTest extends TestCase
     public function test_close_current_invoice()
     {
         $creditCard = CreditCard::factory()->create([
-            'closing_day' => now()->subDay()->day,
+            'closing_day' => now()->day,
             'owner_id' => $this->user->id
         ]);
+        $currentInvoice = $creditCard->getCurrentInvoice();
+        $currentInvoice->final_date = now()->setDay($creditCard->closing_day)->startOfDay();
+        $currentInvoice->save();
+
 
         Sanctum::actingAs(
             $this->user

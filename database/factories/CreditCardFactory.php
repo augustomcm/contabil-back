@@ -41,6 +41,9 @@ class CreditCardFactory extends Factory
                 ]);
 
             $currentInvoice = $creditCard->getCurrentInvoice();
+            $currentInvoice->final_date = now()->setDay($creditCard->closing_day)->startOfDay();
+            $currentInvoice->save();
+
             $currentInvoice->addEntry($entry);
 
             $creditCard->closeCurrentInvoice();

@@ -6,7 +6,6 @@ use App\Models\AccountDefault;
 use App\Models\CreditCard;
 use App\Models\Entry;
 use App\Models\Invoice;
-use App\Models\InvoiceStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -118,8 +117,12 @@ class CreditCardTest extends TestCase
     public function test_close_current_invoice()
     {
         $creditCard = CreditCard::factory()->create([
-            'closing_day' => now()->subDay()->day
+            'closing_day' => now()->day
         ]);
+
+        $currentInvoice = $creditCard->getCurrentInvoice();
+        $currentInvoice->final_date = now()->startOfDay();
+        $currentInvoice->save();
 
         $creditCard->closeCurrentInvoice();
 
@@ -129,8 +132,12 @@ class CreditCardTest extends TestCase
     public function test_pay_closed_invoice()
     {
         $creditCard = CreditCard::factory()->create([
-            'closing_day' => now()->subDay()->day
+            'closing_day' => now()->day
         ]);
+
+        $currentInvoice = $creditCard->getCurrentInvoice();
+        $currentInvoice->final_date = now()->startOfDay();
+        $currentInvoice->save();
 
         $creditCard->closeCurrentInvoice();
 
@@ -140,9 +147,8 @@ class CreditCardTest extends TestCase
     public function test_pay_current_closed_invoice()
     {
         $creditCard = CreditCard::factory()->withClosedInvoice()->create([
-            'closing_day' => now()->subDay()->day
+            'closing_day' => now()->day
         ]);
-
         $currentInvoice = $creditCard->getCurrentInvoice();
 
         $account = AccountDefault::factory()->create([

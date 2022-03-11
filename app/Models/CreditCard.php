@@ -38,7 +38,7 @@ class CreditCard extends Model
     private function createNewInvoice()
     {
         $currentDate = now();
-        if($currentDate->day > $this->closing_day) {
+        if($this->closing_day > $currentDate->day) {
             $startDate = $currentDate
                 ->subMonth()
                 ->setDay($this->closing_day)
