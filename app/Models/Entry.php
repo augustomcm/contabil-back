@@ -123,6 +123,11 @@ class Entry extends Model
         return $this->payment_type === EntryPaymentType::CREDIT_CARD;
     }
 
+    public function setOwner(User $user)
+    {
+        $this->owner()->associate($user);
+    }
+
     public function owner()
     {
         return $this->belongsTo(User::class);

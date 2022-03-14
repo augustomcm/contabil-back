@@ -16,6 +16,23 @@ class EntryServiceTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    public function test_create_income_entry()
+    {
+        $owner = User::factory()->create();
+        $category = Category::factory()->income()->create(['owner_id' => $owner->id]);
+        $creditCard = CreditCard::factory(['owner_id' => $owner->id])
+            ->create([ 'limit' => new Money(1000) ]);
+        $date = new \DateTime('today');
+
+        $service = new EntryService();
+
+        $entry = $service->createIncomeEntry(
+            $date, $this->faker->text, new Money(1000), $owner, $category);
+
+        $this->assertInstanceOf(Entry::class, $entry);
+        $this->assertModelExists($entry);
+    }
+
     public function test_create_expense_entry_credit_card()
     {
         $owner = User::factory()->create();

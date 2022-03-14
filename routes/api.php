@@ -7,7 +7,8 @@ use App\Http\Controllers\ {
     EntryController,
     AccountController,
     CategoryController,
-    CreditCardController
+    CreditCardController,
+    IncomeController
 };
 
 /*
@@ -42,5 +43,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('credit-cards/{creditCard}/pay-invoice', [CreditCardController::class, 'payInvoice']);
 
     Route::post('expenses', [ExpenseEntryController::class, 'store']);
+    Route::post('incomes', [IncomeController::class, 'store']);
 });
 

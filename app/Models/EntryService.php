@@ -6,6 +6,23 @@ use App\Helpers\Interfaces\Money;
 
 class EntryService
 {
+    public function createIncomeEntry(\DateTime $date, string $description, Money $value, User $owner, Category $category) : Entry
+    {
+        $entry = new Entry([
+            'description' => $description,
+            'value' => $value,
+            'type' => EntryType::INCOME,
+            'date' => $date
+        ]);
+
+        $entry->setOwner($owner);
+        $entry->setCategory($category);
+
+        $entry->save();
+
+        return $entry;
+    }
+
     public function createExpenseEntry(\DateTime $date, string $description, Money $value, User $owner, Category $category, CreditCard $creditCard = null) : Entry
     {
         $entry = new Entry([
