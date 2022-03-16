@@ -40,6 +40,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('credit-cards', [CreditCardController::class, 'index']);
     Route::post('credit-cards', [CreditCardController::class, 'store']);
+    Route::put('credit-cards/{creditCard}', [CreditCardController::class, 'update']);
     Route::put('credit-cards/{creditCard}/close-invoice', [CreditCardController::class, 'closeInvoice']);
     Route::put('credit-cards/{creditCard}/pay-invoice', [CreditCardController::class, 'payInvoice']);
 

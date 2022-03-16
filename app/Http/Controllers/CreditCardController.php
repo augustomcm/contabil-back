@@ -53,6 +53,36 @@ class CreditCardController extends Controller
         }
     }
 
+    public function update(Request $req, CreditCard $creditCard)
+    {
+        $validated = $req->validate([
+            'description' => 'required',
+            'closing_day' => 'required',
+            'expiration_day' => 'required',
+            'limit' => 'required'
+        ]);
+
+        DB::beginTransaction();
+        try {
+
+            if($creditCard->owner()->isNot($req->user())) {
+                abort(404);
+            }
+
+            $validated['limit'] = Money::createByFloat($validated['limit']);
+            $creditCard->fill($validated);
+
+            $creditCard->save();
+
+            DB::commit();
+
+            return response()->json('', Response::HTTP_NO_CONTENT);
+        }catch (\Throwable $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
+    }
+
     public function closeInvoice(Request $req, CreditCard $creditCard)
     {
         DB::beginTransaction();

@@ -18,6 +18,8 @@ class CreditCardResource extends JsonResource
             'id' => $this->id,
             'description' => $this->description,
             'limit' => $this->getLimit()->getAmountFloat(),
+            'closing_day' => $this->closing_day,
+            'expiration_day' => $this->expiration_day,
             'currentInvoice' => new InvoiceResource($this->getCurrentInvoice())
         ];
     }

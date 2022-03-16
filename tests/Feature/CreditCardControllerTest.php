@@ -74,8 +74,7 @@ class CreditCardControllerTest extends TestCase
 
         $response = $this->putJson("/api/credit-cards/{$creditCard->id}/close-invoice");
 
-        $response
-            ->assertNoContent();
+        $response->assertNoContent();
     }
 
     public function test_pay_current_invoice()
@@ -98,7 +97,27 @@ class CreditCardControllerTest extends TestCase
             'account' => $account->id
         ]);
 
-        $response
-            ->assertNoContent();
+        $response->assertNoContent();
+    }
+
+    public function test_update_credit_card()
+    {
+        $creditCard = CreditCard::factory()->withClosedInvoice()->create([
+            'closing_day' => now()->subDay()->day,
+            'owner_id' => $this->user->id
+        ]);
+
+        Sanctum::actingAs(
+            $this->user
+        );
+
+        $response = $this->putJson('/api/credit-cards/' . $creditCard->id, [
+            'description' => 'Credit Card',
+            'closing_day' => 12,
+            'expiration_day' => 20,
+            'limit' => 100.00
+        ]);
+
+        $response->assertNoContent();
     }
 }
