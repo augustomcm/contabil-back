@@ -47,4 +47,31 @@ class AccountController extends Controller
             throw $ex;
         }
     }
+
+    public function update(Request $req, AccountDefault $account)
+    {
+        $validated = $req->validate([
+            'description' => 'required',
+            'balance' => 'required'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            if($account->owner()->isNot($req->user())) {
+                abort(404);
+            }
+
+            $account->description = $validated['description'];
+            $account->balance = Money::createByFloat($validated['balance']);
+
+            $account->save();
+
+            DB::commit();
+
+            return response()->json('', Response::HTTP_NO_CONTENT);
+        }catch (\Throwable $ex) {
+            DB::rollBack();
+            throw $ex;
+        }
+    }
 }

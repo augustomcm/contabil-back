@@ -51,4 +51,23 @@ class AccountControllerTest extends TestCase
         $response
             ->assertCreated();
     }
+
+    public function test_update_account()
+    {
+        $account = AccountDefault::factory()->create([
+            'owner_id' => $this->user->id
+        ]);
+
+        Sanctum::actingAs(
+            $this->user
+        );
+
+        $response = $this->putJson('/api/accounts/' . $account->id, [
+            'description' => 'Wallet',
+            'balance' => 100.00
+        ]);
+
+        $response
+            ->assertNoContent();
+    }
 }
