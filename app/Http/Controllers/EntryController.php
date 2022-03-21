@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\AccountDefault;
 use App\Models\Entry;
 use App\Models\EntryService;
+use App\Models\FinancialStatementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -95,5 +96,39 @@ class EntryController extends Controller
             DB::rollBack();
             throw $ex;
         }
+    }
+
+    public function financialStatement(Request $req, FinancialStatementService $statementService)
+    {
+        $validated = $req->validate([
+            'month' => 'required|min:1|max:12'
+        ]);
+
+        $month = !empty($validated['month']) ? $validated['month'] : date('m');
+
+        $initalDate = \Carbon\CarbonImmutable::createMidnightDate(date('Y'), $month, 1);
+        $finalDate = $initalDate->lastOfMonth();
+
+        $entries = Entry::where([
+            'owner_id' => $req->user()->id
+        ])->whereBetween('date', [$initalDate->format('Y-m-d'), $finalDate->format('Y-m-d')])
+          ->get();
+
+        $paidEntries = $entries->filter(fn(Entry $entry) => $entry->isPaid());
+
+        return response()->json([
+            'data' => [
+                'forecast' => [
+                    'totalIncome' => $statementService->calculateTotalIncome($entries),
+                    'totalExpense' => $statementService->calculateTotalExpense($entries),
+                    'balance' => $statementService->calculateBalance($entries),
+                ],
+                'real' => [
+                    'totalIncome' => $statementService->calculateTotalIncome($paidEntries),
+                    'totalExpense' => $statementService->calculateTotalExpense($paidEntries),
+                    'balance' => $statementService->calculateBalance($paidEntries)
+                ]
+            ]
+        ]);
     }
 }

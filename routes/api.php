@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('entries/{entry}', [EntryController::class, 'destroy']);
     Route::put('entries/{entry}/pay', [EntryController::class, 'pay']);
     Route::put('entries/{entry}/cancel-payment', [EntryController::class, 'cancelPayment']);
+    Route::get('entries/financial-statement', [EntryController::class, 'financialStatement']);
 
     Route::get('accounts', [AccountController::class, 'index']);
     Route::post('accounts', [AccountController::class, 'store']);

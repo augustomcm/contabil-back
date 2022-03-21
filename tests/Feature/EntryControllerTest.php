@@ -35,7 +35,7 @@ class EntryControllerTest extends TestCase
 
         $response
             ->assertStatus(200)
-            ->assertJsonCount( 5, 'data')
+            ->assertJsonCount(5, 'data')
             ->assertResource(EntryResource::collection($entries));
     }
 
@@ -54,7 +54,7 @@ class EntryControllerTest extends TestCase
         $response = $this->getJson('/api/entries');
         $response
             ->assertStatus(200)
-            ->assertJsonCount( 5, 'data')
+            ->assertJsonCount(5, 'data')
             ->assertJsonMissing([
                 'id' => $entryOfOtherOwner->id
             ]);
@@ -118,5 +118,29 @@ class EntryControllerTest extends TestCase
 
         $response->assertNoContent();
         $this->assertFalse($entry->fresh()->isPaid());
+    }
+
+    public function test_get_financial_statement()
+    {
+        Sanctum::actingAs(
+            $this->user
+        );
+
+        $response = $this->getJson("/api/entries/financial-statement?month=1");
+
+        $response->assertJsonStructure([
+            'data' => [
+                'forecast' => [
+                    'totalIncome',
+                    'totalExpense',
+                    'balance'
+                ],
+                'real' => [
+                    'totalIncome',
+                    'totalExpense',
+                    'balance'
+                ]
+            ]
+        ]);
     }
 }

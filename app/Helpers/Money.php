@@ -7,7 +7,7 @@ namespace App\Helpers;
  use Money\Formatter\IntlMoneyFormatter;
  use Money\Money as MoneyDefault;
 
- class Money implements IMoney
+ class Money implements IMoney, \JsonSerializable
 {
      protected $money;
      const CURRENCY = 'BRL';
@@ -96,7 +96,10 @@ namespace App\Helpers;
 
      public function jsonSerialize()
      {
-         return $this->money->jsonSerialize();
+         return [
+             'amount' => $this->getAmountFloat(),
+             'currency' => $this->getCurrencyCode()
+         ];
      }
 
      public function greaterThan(IMoney $money): bool
